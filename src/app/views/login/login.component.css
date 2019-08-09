@@ -1,0 +1,59 @@
+.login-container{
+  padding-top: 12vh;
+}
+
+.login-container mat-card {
+  border-radius: 15px;
+}
+
+.input-login-control {
+  background-color: inherit;
+  border: none !important;
+  border-bottom: 1px solid #dadada !important;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.input-login-control:focus{
+  border-bottom: 2px solid #828282 !important;
+}
+
+textarea:focus,
+textarea.form-control:focus,
+input.form-control:focus,
+input[type=text]:focus,
+input[type=password]:focus,
+input[type=email]:focus,
+input[type=number]:focus,
+[type=text].form-control:focus,
+[type=password].form-control:focus,
+[type=email].form-control:focus,
+[type=tel].form-control:focus,
+[contenteditable].form-control:focus {
+  /* border-color: #fff !important; */
+  outline: none !important;
+  box-shadow: none;
+}
+
+.field-icon {
+  float: right;
+  margin-left: -25px;
+  /* margin-top: -25px; */
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.btn-login {
+  box-shadow: 5px 10px 18px #888888;
+}
+
+/* .text-primary{
+  color: #be9edf !important;
+} */
+
+/* .card {
+  border-color: #ffffff;
+  box-shadow: 1px 2px 15px 0 rgba(189,189,189,0.50);
+  border-radius: 5px;
+} */

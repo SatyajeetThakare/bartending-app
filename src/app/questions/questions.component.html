@@ -1,0 +1,14 @@
+<div class="container">
+    <div class="row">
+        <div class="offset-sm-6 col-sm-5">
+            <mat-form-field class="full-width">
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+            </mat-form-field>
+        </div>
+        <div class="col-sm-1 text-right mt-2">
+            <button type="button" mat-mini-fab color="primary" (click)="Add()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+    </div>
+</div>

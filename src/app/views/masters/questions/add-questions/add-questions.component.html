@@ -1,0 +1,51 @@
+<!-- <div class="container">
+  <div class="row">
+    <div class="col-sm-6">
+
+    </div>
+    <div class="col-sm-6">
+
+    </div>
+  </div>
+</div>
+<form [formGroup]="questionsForm" (ngSubmit)="save(quetionsForm)" >
+    <input type="text" formControlName="question">
+        <ng-container [formGroupName]="i">
+          <input placeholder="option1" formControlName="option1">
+          <input placeholder="option2" formControlName="option2">
+          <input placeholder="option3" formControlName="option3">
+          <input placeholder="option4" formControlName="option4">
+        </ng-container>
+      </div> <div formArrayName="options" *ngFor="let creds of questionsForm.controls.options?.value; let i = index">
+     
+      <button type="submit" [disabled]="!questionsForm.valid">Submit</button>
+  </form>
+ -->
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <form [formGroup]="questionsForm" (submit)="save(questionsForm)">
+        <mat-card class="mt-3">
+          <div class="form-group">
+            <div class="row">
+              <mat-form-field class="full-width">
+                <input matInput placeholder="Question" type="text" formControlName="question" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div >
+            <div class="row" formArrayName="options" *ngFor="let creds of questionsForm.controls.options?.value; let i = index">
+              <ng-container [formGroupName]="i">
+                <input placeholder="option1" formControlName="option1">
+                <input placeholder="option2" formControlName="option2">
+                <input placeholder="option3" formControlName="option3">
+                <input placeholder="option4" formControlName="option4">
+              </ng-container>
+            </div>
+          </div>
+          <button type="submit" [disabled]="!questionsForm.valid">Submit</button>
+        </mat-card>
+      </form>
+    </div>
+  </div>
+</div>

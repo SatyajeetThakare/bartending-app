@@ -1,0 +1,62 @@
+<div class="container">
+
+  <div class="row mt-4">
+    <div class="offset-sm-2 col-sm-4 mt-2">
+      <h5>User Role Mapping</h5>
+    </div>
+    <div class="offset-sm-2 col-sm-2 text-right">
+      <button matTooltip="GO TO USER LIST" routerLink="/user-role-mapping" mat-mini-fab class="mat-mini-fab-white" type="button">
+        <mat-icon class="pointer;">arrow_back</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="offset-sm-2 col-sm-8">
+      <mat-card>
+        <form [formGroup]="userRoleMappingForm" (ngSubmit)="saveUserRoleMapping()">
+
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm-6">
+                <mat-form-field class="example-full-width">
+                  <mat-select placeholder="User" formControlName="UserId" required>
+                    <mat-option>None</mat-option>
+                    <mat-option *ngFor="let item of list_user" [value]="item.UserId">
+                      {{item.FirstName}} {{item.LastName}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-6">
+                <mat-form-field class="example-full-width">
+                  <mat-select placeholder="Role" formControlName="RoleId" required>
+                    <mat-option>None</mat-option>
+                    <mat-option *ngFor="let item of list_role" [value]="item.RoleId">
+                      {{item.RoleName}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <br/>
+
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm-12">
+                <button type="button" mat-raised-button class="btn btn-block col-sm-2 mr-3" (click)="findInvalidControls()">RESET</button>
+                <button type="submit" mat-raised-button class="btn btn-block col-sm-2" color="primary" [disabled]="userRoleMappingForm.invalid || !userRoleMappingForm.dirty">
+                  SAVE
+                  <i class="fas fa-spinner ml-2" *ngIf="showLoading"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </mat-card>
+    </div>
+  </div>
+</div>

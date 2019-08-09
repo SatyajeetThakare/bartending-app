@@ -1,0 +1,15 @@
+.dashboard-content > .col-sm-4 > mat-card {
+  color: #454545;
+  padding-top: 10vh;
+  min-height: 40vh;
+  max-height: 40vh;
+}
+
+.dashboard-content > .col-sm-4 > mat-card > p {
+  color: black;
+}
+
+.dashboard-content > .col-sm-4 > mat-card > img {
+  height: 100px;
+  width: 100px;
+}

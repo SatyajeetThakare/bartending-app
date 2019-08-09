@@ -1,0 +1,47 @@
+<div class="container">
+
+  <div class="row" style="margin-top: 10px;">
+    <div class="col-sm-6">
+      <h5 class="mt-3">Organisation master<span class="badge badge-secondary"></span></h5>
+    </div>
+    <div class="col-sm-4">
+      <!-- <mat-form-field>
+        <input matInput placeholder="Search" [(ngModel)]="searchText" placeholder="Search">
+      </mat-form-field> -->
+    </div>
+    <div class="col-sm-2 text-right">
+      <button mat-raised-button class="btn btn-sm btn-block" (click)="addOrganisation()">Add Organisation</button>
+    </div>
+  </div>
+
+  <br/>
+
+  <div class="row mt-2">
+    <div class="col-sm-12">
+      <mat-hint class="pull-right">Double click on row to edit</mat-hint>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-sm-12">
+      <div class="table-container mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource">
+
+          <ng-container matColumnDef="OrgName">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.OrgName}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="OrgDescription">
+            <th mat-header-cell *matHeaderCellDef> Description </th>
+            <td mat-cell *matCellDef="let element"> {{element.OrgDescription}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (dblclick)="editOrganisation(row)"></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
