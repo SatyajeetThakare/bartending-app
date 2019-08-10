@@ -15,7 +15,7 @@ export interface ModuleElement {
   DisplayName: string;
   email_id: string;
   MobileNo: string;
-  RoleCode: string;
+  ModuleCode: string;
 }
 
 const ELEMENT_DATA: ModuleElement[] = [];
@@ -81,7 +81,7 @@ export class ModuleListComponent implements OnInit {
     }
     showLoading: boolean = false;
     indexValue: boolean = false;
-    deleteRoleConfirmation(obj: any, indexValue: number){
+    deleteModuleConfirmation(obj: any, indexValue: number){
       try{
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
           width: '50%',
@@ -96,7 +96,7 @@ export class ModuleListComponent implements OnInit {
   
         dialogRef.afterClosed().subscribe(result => {
           if(result){
-            this.deleteRole(result, indexValue);
+            this.deleteModule(result, indexValue);
           }
         });
       }catch(e){
@@ -104,7 +104,7 @@ export class ModuleListComponent implements OnInit {
       }
     }
   
-    deleteRole(obj: any, indexValue: number){
+    deleteModule(obj: any, indexValue: number){
       try{
   
         this.showLoading = true;

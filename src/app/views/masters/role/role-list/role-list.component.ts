@@ -59,13 +59,16 @@ export class RoleListComponent implements OnInit {
   }
 
   list_role: any = [];
+  applyFilter(filterValue: string){
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
   getRoleList(){
     try{
       this.masterService.selectRole().subscribe((res: any) => {
 
         if(res.status.trim().toLowerCase() === 'success'){
           this.list_role = res.data;
-          this.dataSource = this.list_role;
+          this.dataSource = new MatTableDataSource(this.list_role);
         }else{
           this.snackbarService.openSnackBar(res.message, 'Close', 'error-snackbar');
         }

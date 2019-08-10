@@ -57,6 +57,13 @@ export class MasterService {
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
+  selectCourse(){
+    try{
+      return this.httpService.get('selectCourse');
+    } catch(e){
+      this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
+    }
+  }
   setSessionObj(key: string, data: any): void {
     sessionStorage.setItem(key, JSON.stringify(data));
   }

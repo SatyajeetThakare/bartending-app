@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef, ViewContainerRef } from '@angular/core'
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { MatSort, MatTableDataSource } from '@angular/material';
+import { MatSort, MatTableDataSource, MatDialog } from '@angular/material';
 
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, ActivatedRoute } from '@angular/router';
 import { SnackbarService } from '../../../../services/snackbar.service';
@@ -11,6 +11,7 @@ import { AppConfigService } from '../../../../services/app-config.service';
 import { MasterService } from '../../../../services/master.service';
 
 import * as _ from 'lodash';
+import { ConfirmationDialogComponent } from 'src/app/views/confirmation-dialog/confirmation-dialog.component';
 
 // export class UserListTable {
 //   displayedColumns = ['DisplayName', 'email_id', 'MobileNo', 'UserCode'];
@@ -36,7 +37,7 @@ export class UserListComponent implements OnInit {
   userForm: FormGroup;
   public modalRef: BsModalRef;
 
-  displayedColumns: string[] = ['DisplayName', 'email_id', 'MobileNo', 'UserCode'];
+  displayedColumns: string[] = ['DisplayName', 'email_id', 'MobileNo', 'UserCode','action'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   constructor(private http: HttpClient, private formBuilder: FormBuilder, private modalService: BsModalService,
@@ -45,11 +46,11 @@ export class UserListComponent implements OnInit {
     private appConfigService: AppConfigService,
     private masterService: MasterService,
     private router: Router,
+    public dialog: MatDialog,
     private route: ActivatedRoute
   ) { }
 
   options: any;
-  role_id: number = 0;
   ngOnInit() {
     try{
       console.log('In user list');
@@ -60,13 +61,16 @@ export class UserListComponent implements OnInit {
   }
 
   list_user: any = [];
+  applyFilter(filterValue: string){
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
   getUserList(){
     try{
       this.masterService.selectUser().subscribe((res: any) => {
         console.log('res', res);
         if(res.status.trim().toLowerCase() === 'success'){
           this.list_user = res.data;
-          this.dataSource = this.list_user;
+          this.dataSource = new MatTableDataSource(this.list_user);
         }else{
           this.snackbarService.openSnackBar(res[0].message, 'Close', 'error-snackbar');
         }
@@ -138,7 +142,7 @@ export class UserListComponent implements OnInit {
 
   addUser(){
     try{
-      this.router.navigate(['/user/registration', {user_id: 0, profile_type: 'create'}]);
+      this.router.navigate(['/user/registration', {userId: 0, profile_type: 'create'}]);
     }catch(e){
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
@@ -147,44 +151,47 @@ export class UserListComponent implements OnInit {
   editUser(obj){
     try{
       console.log('obj', obj);
-      this.router.navigate(['/user/registration', {user_id: obj.UserId, profile_type: 'edit'}]);
+      this.router.navigate(['/user/registration', {userId: obj.userId, profile_type: 'edit'}]);
     }catch(e){
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
 
   user_name_modal: string;
-  deleteUserConfirmation(template: TemplateRef<any>, objUser){
+  deleteUserConfirmation(obj: any, indexValue: number){
     try{
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        width: '50%',
+        height: '35%',
+        data: {
+          dialogHeader: 'Delete User',
+          dialogContent: 'Are you sure you want to delete this user entry ' + obj.firstName,
+          userId: obj.userId,
+          reason: null
+        }
+      });
 
-      if(objUser){
-        this.user_name_modal = objUser.user_name;
-
-        this.resetUserObject();
-        // Assign selected district obj to district object of view (i.e. html)
-        this.objUser = objUser;
-        this.bindUserData();
-
-        this.modalRef = this.modalService.show(template);
-      }
+      dialogRef.afterClosed().subscribe(result => {
+        if(result){
+          this.deleteUser(result, indexValue);
+        }
+      });
     }catch(e){
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
 
   reason: string;
-  deleteUser(){
+  deleteUser(obj: any, indexValue: number){
     try{
 
       let data = {
-        'objUserData': this.userForm.value
+        userId: obj.userId,
+        reason: obj.reason
       }
+      console.log("data",data);
 
-      this.userForm.value.reason = this.reason;
-
-      console.log(this.userForm.value);
-
-      this.httpService.put('deleteUser', data).subscribe((res: any) => {
+      this.httpService.put('UserDelete', data).subscribe((res: any) => {
 
         console.log(res);
 

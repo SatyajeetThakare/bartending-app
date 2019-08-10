@@ -6,6 +6,7 @@ import { first } from 'rxjs/operators';
 import { SnackbarService } from '../../../../services/snackbar.service';
 import { HttpService } from '../../../../services/http.service';
 import { AppConfigService } from '../../../../services/app-config.service';
+import { MasterService } from 'src/app/services/master.service';
 @Component({
   selector: 'app-add-module',
   templateUrl: './add-module.component.html',
@@ -32,6 +33,7 @@ export class AddModuleComponent implements OnInit {
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private location: Location,
+    private masterService: MasterService,
     private snackbarService: SnackbarService
   ) { }
 
@@ -89,7 +91,7 @@ export class AddModuleComponent implements OnInit {
   list_course: any = [];
   getCourseList(){
     try{
-      this.httpService.get('selectCourse').subscribe((res:any) =>{
+      this.masterService.selectCourse().subscribe((res:any) =>{
         if(res.status.trim().toLowerCase() === 'success'){
           this.list_course = res.data;
         }else{

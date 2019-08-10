@@ -35,7 +35,7 @@ export class RegistrationComponent implements OnInit {
 
   userId: number = 0;
   objSessionInfo: any;
-
+  pageTitle: string = 'Add User';
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -54,8 +54,18 @@ export class RegistrationComponent implements OnInit {
     this.objSessionInfo = this.appConfigService.getSessionObj('userInfo');
     console.log('this.objSessionInfo');
     console.log(this.objSessionInfo);
-    this.resetUserObject();
-    this.bindUserData();
+    this.route.params.subscribe(params => {
+
+      this.userId = params.userId;
+      console.log('this.userId', this.userId);
+      this.resetUserObject();
+      this.bindUserData();
+
+      if(params['userId'] > 0) {
+        this.pageTitle = 'Edit User';
+        this.getUserDetails();
+      }
+    });
   }
 
   // resetRegistrationForm(){
@@ -67,36 +77,59 @@ export class RegistrationComponent implements OnInit {
   resetUserObject(){
     try{
       this.objUser = {
-        UserId: 0,
-        usercode: null,
-        firstname: null,
-        lastname: null,
-        photopath: null,
+        userId: this.userId > 0 ? Number(this.userId) : 0,
+        userCode: null,
+        firstName: null,
+        lastName: null,
+        photoPath: null,
         password: null,
-        mobileno: null,
-        emailid: null,
-        joiningdate: null,
-        isactive: 1,
+        mobileNo: null,
+        email_Id: null,
+        joiningDate: null,
+        createdBy: this.appConfigService.getSessionObj('userInfo').userId,
+        updatedBy: this.appConfigService.getSessionObj('userInfo').userId,
+        isActive: 1,
       }
     }catch(e){
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
+  getUserDetails(){
+    try{
 
+      this.httpService.post(`Selectuserbyid`, {userId: this.userId}).subscribe((res: any) => {
+        console.log('res', res);
+
+        if(res && res.status.trim().toLowerCase() == 'success'){
+          this.objUser = JSON.parse(JSON.stringify({...this.objUser, ...res.data }));
+          console.log('this.objUser', this.objUser);
+          this.bindUserData();
+        }else {
+          this.snackbarService.openSnackBar(res.message, 'Close', 'error-snackbar');
+        }
+      }, (err) => {
+        this.snackbarService.openSnackBar(err.statusText, 'Close', 'error-snackbar');
+      });
+    }catch(e){
+      this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
+    }
+  }
   bindUserData(){
     try{
       this.userForm = this.formBuilder.group({
-        UserId: [this.objUser.UserId, Validators.required],
-        usercode: [this.objUser.usercode, Validators.required],
-        firstname: [this.objUser.firstname, [Validators.required, Validators.pattern(this.charactersPattern)]],
-        lastname: [this.objUser.lastname, [Validators.required, Validators.pattern(this.charactersPattern)]],
-        photopath: [this.objUser.photopath],
+        userId: [this.objUser.userId, Validators.required],
+        userCode: [this.objUser.userCode, Validators.required],
+        firstName: [this.objUser.firstName, [Validators.required, Validators.pattern(this.charactersPattern)]],
+        lastName: [this.objUser.lastName, [Validators.required, Validators.pattern(this.charactersPattern)]],
+        photoPath: '',
         password: [this.objUser.password, Validators.required],
-        // password: [{value: this.objUser.password, disabled: (this.objSessionInfo.role_id == 1 ? false : true)}, [Validators.required, Validators.pattern(this.passwordPattern)]],
-        mobileno: [this.objUser.mobileno, [Validators.required, Validators.pattern(this.mobnumPattern)]],
-        emailid: [this.objUser.emailid, [Validators.required, Validators.pattern(this.emailPattern)]],
-        joiningdate: [this.objUser.joiningdate],
-        isactive: [this.objUser.isactive, Validators.required]
+        // password: [{value: this.objUser.password, disabled: (this.objSessionInfo.user_id == 1 ? false : true)}, [Validators.required, Validators.pattern(this.passwordPattern)]],
+        mobileNo: [this.objUser.mobileNo, [Validators.required, Validators.pattern(this.mobnumPattern)]],
+        email_Id: [this.objUser.email_Id, [Validators.required, Validators.pattern(this.emailPattern)]],
+        joiningDate: [this.objUser.joiningDate],
+        createdBy: [this.objUser.createdBy, Validators.required],
+        updatedBy: [this.objUser.updatedBy, Validators.required],
+        isActive: [this.objUser.isActive, Validators.required]
       });
 
       this.findInvalidControls();
@@ -122,18 +155,13 @@ export class RegistrationComponent implements OnInit {
   showLoading: boolean = false;
   saveUserProfile(){
     try{
-
       this.showLoading = true;
-
       let data = this.userForm.getRawValue();
-
       console.log('data', data);
-
-      this.httpService.post(`Userinsert`, data).subscribe((res: any) => {
+      let urlValue = this.userId > 0 ? `UpdateUser` : `Userinsert`;
+      this.httpService.post(urlValue, data).subscribe((res: any) => {
         console.log('res', res);
-
         this.showLoading = false;
-
         if(res && res.status.trim().toLowerCase() == 'success'){
           this.snackbarService.openSnackBar(res.message, 'Close', 'success-snackbar');
           this.location.back();
@@ -163,10 +191,4 @@ export class RegistrationComponent implements OnInit {
 
   // convenience getter for easy access to form fields
   // get f() { return this.registerForm.controls; }
-
-  onSubmit() {
-    console.log("Submitted");
-    // console.log("form value",this.registerForm.value);
-  }
-
 }

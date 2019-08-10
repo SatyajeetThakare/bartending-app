@@ -35,7 +35,7 @@ export class AddCourseComponent implements OnInit {
 
   courseId: number = 0;
   objSessionInfo: any;
-
+  pageTitle: string = 'Add Course';
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -49,13 +49,19 @@ export class AddCourseComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('In add-course component');
-    // this.resetAddCourseForm();
     this.objSessionInfo = this.appConfigService.getSessionObj('userInfo');
-    console.log('this.objSessionInfo');
-    console.log(this.objSessionInfo);
-    this.resetCourseObject();
-    this.bindCourseData();
+    this.route.params.subscribe(params => {
+
+      this.courseId = params.courseId;
+      console.log("courseId",this.courseId);
+      this.resetCourseObject();
+      this.bindCourseData();
+
+      if(params['courseId'] > 0) {
+        this.pageTitle = 'Edit Course';
+        this.getCourseDetails();
+      }
+    });
   }
 
   // resetAddCourseForm(){
@@ -67,13 +73,15 @@ export class AddCourseComponent implements OnInit {
   resetCourseObject(){
     try{
       this.objCourse = {
-        CourseId: 0,
-        CourseName: null,
-        CourseCode: null,
-        CourseDescription: null,
-        createdby: this.appConfigService.getSessionObj('userInfo').UserId,
-        updatedby: this.appConfigService.getSessionObj('userInfo').UserId,
-        isactive: 1,
+        courseId: this.courseId > 0 ? Number(this.courseId) : 0,
+        courseName: null,
+        courseCode: null,
+        courseDescription: null,
+        coursePosterImage: null,
+        courseReferenceLink: null,
+        createdby: this.appConfigService.getSessionObj('userInfo').userId,
+        updatedby: this.appConfigService.getSessionObj('userInfo').userId,
+        isActive: 1,
       }
     }catch(e){
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
@@ -83,13 +91,15 @@ export class AddCourseComponent implements OnInit {
   bindCourseData(){
     try{
       this.courseForm = this.formBuilder.group({
-        CourseId: [this.objCourse.CourseId, Validators.required],
-        CourseName: [this.objCourse.CourseName, Validators.required],
-        CourseCode: [this.objCourse.CourseCode, Validators.required],
-        CourseDescription: [this.objCourse.CourseDescription, [Validators.required, Validators.pattern(this.charactersPattern)]],
+        courseId: [this.objCourse.courseId, Validators.required],
+        courseName: [this.objCourse.courseName, Validators.required],
+        courseCode: [this.objCourse.courseCode, Validators.required],
+        courseDescription: [this.objCourse.courseDescription, [Validators.required, Validators.pattern(this.charactersPattern)]],
+        coursePosterImage: '',
+        courseReferenceLink: '',
         createdby: [this.objCourse.createdby, Validators.required],
         updatedby: [this.objCourse.updatedby, Validators.required],
-        isactive: [this.objCourse.isactive, Validators.required]
+        isActive: [this.objCourse.isActive, Validators.required]
       });
 
       this.findInvalidControls();
@@ -97,7 +107,25 @@ export class AddCourseComponent implements OnInit {
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
-
+  getCourseDetails(){
+    try{
+      console.log('id',this.courseId);
+      this.httpService.post(`selectCoursebyid`, {courseId: this.courseId}).subscribe((res: any) => {
+        console.log("in getCoursedetails",res);
+        if(res && res.status.trim().toLowerCase() == 'success'){
+          this.objCourse = JSON.parse(JSON.stringify({...this.objCourse, ...res.data }));
+          console.log("this.objCourse",this.objCourse);
+          this.bindCourseData();
+        }else {
+          this.snackbarService.openSnackBar(res.message, 'Close', 'error-snackbar');
+        }
+      }, (err) => {
+        this.snackbarService.openSnackBar(err.statusText, 'Close', 'error-snackbar');
+      });
+    }catch(e){
+      this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
+    }
+  }
   aplphabetsOnly(event: any) {
     try{
 
@@ -111,7 +139,10 @@ export class AddCourseComponent implements OnInit {
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
-
+  resetFormData(){
+    this.resetCourseObject();
+    this.bindCourseData();
+  }
   showLoading: boolean = false;
   saveCourse(){
     try{
@@ -121,10 +152,9 @@ export class AddCourseComponent implements OnInit {
       let data = this.courseForm.getRawValue();
 
       console.log('data', data);
-
-      this.httpService.post(`Courseinsert`, data).subscribe((res: any) => {
+      let urlValue = this.courseId > 0 ? `UpdateCourse` : `Courseinsert`;
+      this.httpService.post(urlValue, data).subscribe((res: any) => {
         console.log('res', res);
-
         this.showLoading = false;
 
         if(res && res.status.trim().toLowerCase() == 'success'){

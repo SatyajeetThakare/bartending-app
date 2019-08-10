@@ -5,7 +5,7 @@
       <h5>User Registration</h5>
     </div>
     <div class="offset-sm-2 col-sm-2 text-right">
-      <button matTooltip="GO TO USER LIST" routerLink="/user" mat-mini-fab class="mat-mini-fab-white" type="button">
+      <button matTooltip="GO BACK" routerLink="/user" mat-mini-fab class="mat-mini-fab-white" type="button">
         <mat-icon class="pointer;">arrow_back</mat-icon>
       </button>
     </div>
@@ -19,8 +19,9 @@
           <div class="form-group">
             <div class="row">
               <div class="col-sm-6">
-                <mat-form-field class="example-full-width">
-                  <input matInput formControlName="usercode" placeholder="User code" required>
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>User code</mat-label>
+                  <input matInput formControlName="userCode" placeholder="User code" required>
                 </mat-form-field>
               </div>
             </div>
@@ -29,13 +30,15 @@
           <div class="form-group">
             <div class="row">
               <div class="col-sm-6">
-                <mat-form-field class="example-full-width">
-                  <input matInput formControlName="firstname" placeholder="First name" (keypress)="aplphabetsOnly($event)" (blur)="aplphabetsOnly($event)" required>
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>First name</mat-label>
+                  <input matInput formControlName="firstName" placeholder="First name" (keypress)="aplphabetsOnly($event)" (blur)="aplphabetsOnly($event)" required>
                 </mat-form-field>
               </div>
               <div class="col-sm-6">
-                <mat-form-field class="example-full-width">
-                  <input matInput formControlName="lastname" placeholder="Last name" (keypress)="aplphabetsOnly($event)" (blur)="aplphabetsOnly($event)" required>
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Last name</mat-label>
+                  <input matInput formControlName="lastName" placeholder="Last name" (keypress)="aplphabetsOnly($event)" (blur)="aplphabetsOnly($event)" required>
                 </mat-form-field>
               </div>
             </div>
@@ -43,13 +46,15 @@
           <div class="form-group">
             <div class="row">
               <div class="col-sm-6">
-                <mat-form-field class="example-full-width">
-                  <input matInput formControlName="emailid" placeholder="Email Id" required>
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Email</mat-label>
+                  <input matInput formControlName="email_Id" placeholder="Email Id" required>
                   <mat-hint class="text-primary">This will be considered as username to login to the system</mat-hint>
                 </mat-form-field>
               </div>
               <div class="col-sm-6">
-                <mat-form-field class="example-full-width">
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Password</mat-label>
                   <input matInput formControlName="password" type="password" placeholder="Password" required>
                   <mat-hint class="text-warning">Note: Password must include  - at least 8 characters, Lowercase letter, Uppercase letter, Number, Special character</mat-hint>
                 </mat-form-field>
@@ -60,14 +65,16 @@
           <div class="form-group">
             <div class="row">
               <div class="col-sm-6">
-                <mat-form-field class="example-full-width">
-                  <input matInput formControlName="mobileno" placeholder="Mobile number" required>
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Mobile no</mat-label>
+                  <input matInput formControlName="mobileNo" placeholder="Mobile number" required>
                 </mat-form-field>
               </div>
               <div class="col-sm-6">
-                <mat-form-field class="example-full-width">
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Joining date</mat-label>
                   <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="pickerReq" (focus)="pickerReq.open()"
-                    placeholder="Joining date" formControlName="joiningdate" required>
+                    placeholder="Joining date" formControlName="joiningDate" required>
                   <mat-datepicker-toggle matSuffix [for]="pickerReq"></mat-datepicker-toggle>
                   <mat-datepicker #pickerReq></mat-datepicker>
                 </mat-form-field>

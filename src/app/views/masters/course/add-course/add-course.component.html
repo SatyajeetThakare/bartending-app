@@ -5,7 +5,7 @@
       <h5>Course</h5>
     </div>
     <div class="offset-sm-2 col-sm-2 text-right">
-      <button matTooltip="GO TO USER LIST" routerLink="/course" mat-mini-fab class="mat-mini-fab-white" type="button">
+      <button matTooltip="GO BACK" routerLink="/course" mat-mini-fab class="mat-mini-fab-white" type="button">
         <mat-icon class="pointer;">arrow_back</mat-icon>
       </button>
     </div>
@@ -18,35 +18,41 @@
 
           <div class="form-group">
             <div class="row">
-              <div class="col-sm-6">
-                <mat-form-field class="example-full-width">
-                  <input matInput formControlName="CourseName" placeholder="Course name" required>
-                </mat-form-field>
-              </div>
-              <div class="col-sm-6">
-                <mat-form-field class="example-full-width">
-                  <input matInput formControlName="CourseCode" placeholder="Course code" required>
+              <div class="col-sm-12">
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Course name</mat-label>
+                  <input matInput formControlName="courseName" placeholder="Course name" required>
                 </mat-form-field>
               </div>
             </div>
           </div>
-
           <div class="form-group">
             <div class="row">
-              <div class="col-sm-6">
-                <mat-form-field class="example-full-width">
-                  <input matInput formControlName="CourseDescription" placeholder="Course description" required>
+              <div class="col-sm-12">
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Course code</mat-label>
+                  <input matInput formControlName="courseCode" placeholder="Course code" required>
                 </mat-form-field>
               </div>
             </div>
           </div>
-
-          <br/>
 
           <div class="form-group">
             <div class="row">
               <div class="col-sm-12">
-                <button type="button" mat-raised-button class="btn btn-block col-sm-2 mr-3" (click)="findInvalidControls()">RESET</button>
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Course description</mat-label>
+                  <input matInput formControlName="courseDescription" placeholder="Course description" 
+                  (keypress)="aplphabetsOnly($event)" (blur)="aplphabetsOnly($event)" required>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <br/>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm-12">
+                <button type="button" mat-raised-button class="btn btn-block col-sm-2 mr-3" (click)="resetFormData()">RESET</button>
                 <button type="submit" mat-raised-button class="btn btn-block col-sm-2" color="primary" [disabled]="courseForm.invalid || !courseForm.dirty">
                   SAVE
                   <i class="fas fa-spinner ml-2" *ngIf="showLoading"></i>
