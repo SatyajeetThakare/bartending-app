@@ -9,6 +9,7 @@ import { AddQuestionsComponent } from './add-questions/add-questions.component';
 @NgModule({
   imports: [
     CommonModule,
+    SharedModule,
     QuestionsRoutingModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

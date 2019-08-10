@@ -7,16 +7,25 @@ import { FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
   styleUrls: ['./add-questions.component.scss']
 })
 export class AddQuestionsComponent implements OnInit {
-  questionsForm: FormGroup;
+  questionForm: FormGroup;
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
     this.newForm();
     this.buildForm();
   }
+
+  selectedChoiceIndex: number = 1;
+  questionChoices: any[] = [
+    { id: 1, choiceText: 'Description', isSelected: false },
+    { id: 2, choiceText: 'Image', isSelected: false },
+    { id: 3, choiceText: 'Video', isSelected: false }
+  ]
+  noOfAnswers: number[] = [1, 2, 3, 4];
+
   newForm() {
     try {
-      this.questionsForm = new FormGroup({
+      this.questionForm = new FormGroup({
         question: new FormControl(''),
         options: this.fb.array([]),
       });
@@ -26,7 +35,7 @@ export class AddQuestionsComponent implements OnInit {
     }
   }
   buildForm() {
-    const creds = this.questionsForm.controls.options as FormArray;
+    const creds = this.questionForm.controls.options as FormArray;
     creds.push(this.fb.group({
       option1: '',
       option2: '',
@@ -35,8 +44,8 @@ export class AddQuestionsComponent implements OnInit {
     }));
   }
   save() {
-    console.log(this.questionsForm.value);
-    this.saveSessionItem('questionObj',this.questionsForm.value);
+    console.log(this.questionForm.value);
+    this.saveSessionItem('questionObj',this.questionForm.value);
   }
  saveSessionItem(keyName: string,data: any) {
   sessionStorage.setItem(keyName,JSON.stringify(data));

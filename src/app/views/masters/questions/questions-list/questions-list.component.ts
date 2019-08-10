@@ -15,15 +15,15 @@ export class QuestionsListComponent implements OnInit {
     console.log( this.getSessionItem('questionObj'));
   }
 
-  add(){
-    this.router.navigate(['/add-questions']);
+  addQuestion(){
+    this.router.navigate(['/questions/add-questions']);
     console.log("Add button");
   }
 
   applyFilter(filterValue:string){
-    console.log("Filter value is ",filterValue);
+    console.log("Filter value is ", filterValue);
   }
-  
+
   getSessionItem(keyname:string){
     return JSON.parse(sessionStorage.getItem(keyname));
   }
