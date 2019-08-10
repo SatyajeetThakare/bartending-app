@@ -14,6 +14,7 @@ const routes: Routes = [
   { path: 'questions', loadChildren: './views/masters/questions/questions.module#QuestionsModule'},
   { path: 'course', loadChildren: './views/masters/course/course.module#CourseModule', canActivate: [AuthGuard] },
   { path: 'organisation', loadChildren: './views/masters/organisation/organisation.module#OrganisationModule', canActivate: [AuthGuard] },
+  { path: 'module', loadChildren:'./views/masters/module/module.module#ModuleModule', canActivate:  [AuthGuard]},
   { path: 'role', loadChildren: './views/masters/role/role.module#RoleModule', canActivate: [AuthGuard] },
   { path: 'user', loadChildren: './views/masters/user/user.module#UserModule', canActivate: [AuthGuard] },
   { path: 'user-role-mapping', loadChildren: './views/masters/user-role-mapping/user-role-mapping.module#UserRoleMappingModule', canActivate: [AuthGuard] },
