@@ -50,7 +50,7 @@ export class ModuleListComponent implements OnInit {
   getModuleList(){
     try{
       this.masterService.selectModule().subscribe((res: any) => {
-
+        console.log('res', res);
         if(res.status.trim().toLowerCase() === 'success'){
           this.list_module = res.data;
           this.dataSource =new MatTableDataSource(this.list_module);
@@ -93,7 +93,7 @@ export class ModuleListComponent implements OnInit {
             reason: null
           }
         });
-  
+
         dialogRef.afterClosed().subscribe(result => {
           if(result){
             this.deleteModule(result, indexValue);
@@ -103,18 +103,18 @@ export class ModuleListComponent implements OnInit {
         this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
       }
     }
-  
+    
     deleteModule(obj: any, indexValue: number){
       try{
-  
+
         this.showLoading = true;
-  
+
         let data = {
           moduleId: obj.moduleId,
           reason: obj.reason
         }
-  
-  
+
+
         this.httpService.post(`Deletemodulebyid`, data).subscribe( (res: any) => {
           if(res && res.status.trim().toLowerCase() == 'success'){
             this.snackbarService.openSnackBar('Record deleted successfully', 'Close', 'success-snackbar');
@@ -132,4 +132,3 @@ export class ModuleListComponent implements OnInit {
       }
     }
   }
-

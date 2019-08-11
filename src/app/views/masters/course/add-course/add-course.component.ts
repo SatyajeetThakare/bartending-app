@@ -53,7 +53,7 @@ export class AddCourseComponent implements OnInit {
     this.route.params.subscribe(params => {
 
       this.courseId = params.courseId;
-      console.log("courseId",this.courseId);
+      console.log("courseId", params['courseId']);
       this.resetCourseObject();
       this.bindCourseData();
 
@@ -109,7 +109,7 @@ export class AddCourseComponent implements OnInit {
   }
   getCourseDetails(){
     try{
-      console.log('id',this.courseId);
+      console.log('id', this.courseId);
       this.httpService.post(`selectCoursebyid`, {courseId: this.courseId}).subscribe((res: any) => {
         console.log("in getCoursedetails",res);
         if(res && res.status.trim().toLowerCase() == 'success'){

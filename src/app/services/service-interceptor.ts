@@ -11,6 +11,7 @@ import {
 } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import { AuthService } from './auth.service';
+import { SnackbarService } from './snackbar.service';
 
 // const httpOptions = {
 //   headers: new HttpHeaders({
@@ -24,7 +25,10 @@ import { AuthService } from './auth.service';
 @Injectable()
 export class ServiceInterceptor implements HttpInterceptor {
 
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private snackbarService: SnackbarService
+  ) {
   }
 
   //function which will be called for all http calls
@@ -40,19 +44,15 @@ export class ServiceInterceptor implements HttpInterceptor {
     const authReq = req.clone({ setHeaders: { "authtoken": this.authService.getAuthToken(), "userid": this.authService.getUserInfo().userId ? this.authService.getUserInfo().userId : 0 } });
 
     //logging the updated Parameters to browser's console
-    console.log("Before making api call : ", authReq);
+    // console.log("Before making api call : ", authReq);
 
     let urlPathValue: string = null;
     if(authReq.url){
       urlPathValue = new URL(authReq.url).pathname;
     }
-
-    console.log('urlPathValue', urlPathValue)
-
+    // console.log('urlPathValue', urlPathValue)
 
     if(urlPathValue != '/login'){
-
-      console.log('urlPathValue', urlPathValue)
 
       return next.handle(authReq).pipe(
         tap(
@@ -63,9 +63,14 @@ export class ServiceInterceptor implements HttpInterceptor {
             }
           },
           error => {
+
             //logging the http response to browser's console in case of a failuer
             if (event instanceof HttpResponse) {
               console.log("api call error :", event);
+            }else if(error.status === 401){
+              console.log('Error', error)
+              this.snackbarService.openSnackBar('Session expired, please login again.', 'Close', 'error-snackbar');
+              this.doErrorProcessing();
             }
           }
         )
@@ -73,6 +78,14 @@ export class ServiceInterceptor implements HttpInterceptor {
     }else{
       return next.handle(authReq)
     }
+  }
 
+  doErrorProcessing(){
+    try{
+      console.log('Doing error processing');
+      this.authService.logout();
+    }catch(e){
+
+    }
   }
 }
