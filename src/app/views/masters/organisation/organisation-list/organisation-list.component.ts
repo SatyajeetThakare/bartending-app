@@ -9,7 +9,8 @@ import { SnackbarService } from '../../../../services/snackbar.service';
 import { HttpService } from '../../../../services/http.service';
 import { AppConfigService } from '../../../../services/app-config.service';
 import { MasterService } from '../../../../services/master.service';
-
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
 import * as _ from 'lodash';
 import { ConfirmationDialogComponent } from 'src/app/views/confirmation-dialog/confirmation-dialog.component';
 
@@ -36,7 +37,7 @@ export class OrganisationListComponent implements OnInit {
 
   displayedColumns: string[] = ['OrgName', 'OrgDescription','action'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
-
+  destroySubscriptions$: Subject<boolean> = new Subject<boolean>();
   constructor(private http: HttpClient, private formBuilder: FormBuilder, private modalService: BsModalService,
     private snackbarService: SnackbarService,
     private httpService: HttpService,
@@ -61,7 +62,7 @@ export class OrganisationListComponent implements OnInit {
   list_organisation: any = [];
   getOrganisationList(){
     try{
-      this.masterService.selectOrg().subscribe((res: any) => {
+      this.masterService.selectOrg().takeUntil(this.destroySubscriptions$).subscribe((res: any) => {
         console.log('res', res);
         if(res.status.trim().toLowerCase() === 'success'){
           this.list_organisation = res.data;
@@ -147,5 +148,9 @@ export class OrganisationListComponent implements OnInit {
     } catch (e) {
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
+  }
+  ngOnDestroy(){
+    this.destroySubscriptions$.next(true);
+    this.destroySubscriptions$.complete();
   }
 }

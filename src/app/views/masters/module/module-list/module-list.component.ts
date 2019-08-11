@@ -9,7 +9,8 @@ import { SnackbarService } from '../../../../services/snackbar.service';
 import { HttpService } from '../../../../services/http.service';
 import { AppConfigService } from '../../../../services/app-config.service';
 import { MasterService } from '../../../../services/master.service';
-
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
 import { ConfirmationDialogComponent } from '../../../confirmation-dialog/confirmation-dialog.component';
 export interface ModuleElement {
   DisplayName: string;
@@ -28,7 +29,7 @@ export class ModuleListComponent implements OnInit {
 
   displayedColumns: string[] = ['moduleCode','moduleName','moduleDescription', 'action'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
-
+  destroySubscriptions$: Subject<boolean> = new Subject<boolean>();
   constructor(private http: HttpClient,
     private snackbarService: SnackbarService,
     private httpService: HttpService,
@@ -49,8 +50,8 @@ export class ModuleListComponent implements OnInit {
   list_module: any = [];
   getModuleList(){
     try{
-      this.masterService.selectModule().subscribe((res: any) => {
-        console.log('res', res);
+      this.masterService.selectModule().takeUntil(this.destroySubscriptions$).subscribe((res: any) => {
+
         if(res.status.trim().toLowerCase() === 'success'){
           this.list_module = res.data;
           this.dataSource =new MatTableDataSource(this.list_module);
@@ -130,5 +131,9 @@ export class ModuleListComponent implements OnInit {
       } catch (e) {
         this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
       }
+    }
+    ngOnDestroy(){
+      this.destroySubscriptions$.next(true);
+      this.destroySubscriptions$.complete();
     }
   }
