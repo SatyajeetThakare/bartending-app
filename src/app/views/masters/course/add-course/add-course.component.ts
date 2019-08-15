@@ -107,6 +107,7 @@ export class AddCourseComponent implements OnInit {
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
+
   getCourseDetails(){
     try{
       console.log('id', this.courseId);
@@ -126,6 +127,7 @@ export class AddCourseComponent implements OnInit {
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
+
   aplphabetsOnly(event: any) {
     try{
 
@@ -139,10 +141,12 @@ export class AddCourseComponent implements OnInit {
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
+
   resetFormData(){
     this.resetCourseObject();
     this.bindCourseData();
   }
+  
   showLoading: boolean = false;
   saveCourse(){
     try{
