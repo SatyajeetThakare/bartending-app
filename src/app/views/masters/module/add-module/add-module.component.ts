@@ -43,6 +43,7 @@ export class AddModuleComponent implements OnInit {
     this.route.params.subscribe(params => {
 
       this.moduleId = params.moduleId;
+      console.log('this.moduleId', this.moduleId)
       this.resetModuleObject();
       this.bindModuleData();
 
@@ -88,6 +89,7 @@ export class AddModuleComponent implements OnInit {
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
+
   list_course: any = [];
   getCourseList(){
     try{
@@ -102,6 +104,7 @@ export class AddModuleComponent implements OnInit {
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
+
   getModuleDetails(){
     try{
 

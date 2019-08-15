@@ -47,6 +47,7 @@ export class ModuleListComponent implements OnInit {
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
+
   list_module: any = [];
   getModuleList(){
     try{
@@ -63,6 +64,7 @@ export class ModuleListComponent implements OnInit {
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
+
   addModule(){
     try{
       this.router.navigate(['/module/add-module', {moduleId: 0, profile_type: 'create'}]);
@@ -70,70 +72,75 @@ export class ModuleListComponent implements OnInit {
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
+
   editModule(obj){
     try{
+      console.log(obj);
       this.router.navigate(['/module/add-module', {moduleId: obj.ModuleId, profile_type: 'edit'}]);
     }catch(e){
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
-    applyFilter(filterValue: string){
-      this.dataSource.filter = filterValue.trim().toLowerCase();
-    }
-    showLoading: boolean = false;
-    indexValue: boolean = false;
-    deleteModuleConfirmation(obj: any, indexValue: number){
-      try{
-        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-          width: '50%',
-          height: '35%',
-          data: {
-            dialogHeader: 'Delete Module',
-            dialogContent: 'Do you want to delete this entry: ' + obj.ModuleName,
-            moduleId: obj.ModuleId,
-            reason: null
-          }
-        });
 
-        dialogRef.afterClosed().subscribe(result => {
-          if(result){
-            this.deleteModule(result, indexValue);
-          }
-        });
-      }catch(e){
-        this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
-      }
-    }
-    
-    deleteModule(obj: any, indexValue: number){
-      try{
+  applyFilter(filterValue: string){
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 
-        this.showLoading = true;
-
-        let data = {
-          moduleId: obj.moduleId,
-          reason: obj.reason
+  showLoading: boolean = false;
+  indexValue: boolean = false;
+  deleteModuleConfirmation(obj: any, indexValue: number){
+    try{
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        width: '50%',
+        height: '35%',
+        data: {
+          dialogHeader: 'Delete Module',
+          dialogContent: 'Do you want to delete this entry: ' + obj.ModuleName,
+          moduleId: obj.ModuleId,
+          reason: null
         }
+      });
 
-
-        this.httpService.post(`Deletemodulebyid`, data).subscribe( (res: any) => {
-          if(res && res.status.trim().toLowerCase() == 'success'){
-            this.snackbarService.openSnackBar('Record deleted successfully', 'Close', 'success-snackbar');
-            this.getModuleList();
-          }else{
-            this.snackbarService.openSnackBar(res.message ? res.message : 'Some error occurred', 'Close', 'error-snackbar');
-          }
-          this.showLoading = false;
-        }, (err: any) => {
-          this.showLoading = false;
-          this.snackbarService.openSnackBar(err.statusText, 'Close', 'error-snackbar');
-        });
-      } catch (e) {
-        this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
-      }
-    }
-    ngOnDestroy(){
-      this.destroySubscriptions$.next(true);
-      this.destroySubscriptions$.complete();
+      dialogRef.afterClosed().subscribe(result => {
+        if(result){
+          this.deleteModule(result, indexValue);
+        }
+      });
+    }catch(e){
+      this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
+
+  deleteModule(obj: any, indexValue: number){
+    try{
+
+      this.showLoading = true;
+
+      let data = {
+        moduleId: obj.moduleId,
+        reason: obj.reason
+      }
+
+
+      this.httpService.post(`Deletemodulebyid`, data).subscribe( (res: any) => {
+        if(res && res.status.trim().toLowerCase() == 'success'){
+          this.snackbarService.openSnackBar('Record deleted successfully', 'Close', 'success-snackbar');
+          this.getModuleList();
+        }else{
+          this.snackbarService.openSnackBar(res.message ? res.message : 'Some error occurred', 'Close', 'error-snackbar');
+        }
+        this.showLoading = false;
+      }, (err: any) => {
+        this.showLoading = false;
+        this.snackbarService.openSnackBar(err.statusText, 'Close', 'error-snackbar');
+      });
+    } catch (e) {
+      this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
+    }
+  }
+
+  ngOnDestroy(){
+    this.destroySubscriptions$.next(true);
+    this.destroySubscriptions$.complete();
+  }
+}

@@ -27,17 +27,18 @@ export class HttpService {
 
     this.authToken = JSON.parse(sessionStorage.getItem('authToken'));
     this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
-    // console.log('this.authToken', this.authToken, this.userInfo);
-    // console.log('this.headers', httpOptions)
+    console.log('this.authToken', this.authToken, this.userInfo);
+
+    console.log('this.headers', httpOptions)
   }
 
   get(url: string) {
-    // console.log('httpOptions', url, httpOptions)
+    console.log('httpOptions', url, httpOptions)
     return this.http.get(this.baseUrl + url);
   }
 
   post(url: string, data: any, secureApi: boolean = true) {
-    // console.log('URL: ', this.baseUrl + url, httpOptions);
+    console.log('URL: ', this.baseUrl + url, httpOptions);
     if(secureApi){
       return this.http.post(this.baseUrl + url, data, httpOptions);
     }else{
