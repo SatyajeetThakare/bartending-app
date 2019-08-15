@@ -24,9 +24,10 @@ export class AddQuestionsComponent implements OnInit {
 
     this.createArrayItems();
     this.newForm();
-    this.buildForm();
+    // this.buildForm();
   }
 
+  arrayItems: any[] = [];
   createArrayItems(){
     try{
       for(var i = 0; i <= 3; i++){
@@ -44,19 +45,21 @@ export class AddQuestionsComponent implements OnInit {
     { id: 3, choiceText: 'Video', isSelected: false }
   ]
 
-  arrayItems: {
-    answerDescription: string;
-    isValid: boolean;
-  }[];
+  // arrayItems: {
+  //   answerDescription: string;
+  //   isValid: boolean;
+  // }[];
 
   // arrayItem: arrayItems[];
 
   newForm() {
     try {
+      console.log('this.arrayItems', this.arrayItems)
       this.questionForm = new FormGroup({
         questionType: new FormControl(''),
         questionDescription: new FormControl(''),
-        questionArray: this.fb.array([])
+        // questionArray: this.fb.array([])
+        questionArray: this.fb.array(this.arrayItems)
       });
     }
     catch (e) {
@@ -64,15 +67,15 @@ export class AddQuestionsComponent implements OnInit {
     }
   }
 
-  buildForm() {
-    const creds = this.questionForm.controls.options as FormArray;
-    creds.push(this.fb.group({
-      option1: '',
-      option2: '',
-      option3: '',
-      option4: '',
-    }));
-  }
+  // buildForm() {
+  //   const creds = this.questionForm.controls.options as FormArray;
+  //   creds.push(this.fb.group({
+  //     option1: '',
+  //     option2: '',
+  //     option3: '',
+  //     option4: '',
+  //   }));
+  // }
 
   save() {
     console.log(this.questionForm.value);
