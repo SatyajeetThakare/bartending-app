@@ -6,6 +6,11 @@ import { HttpService } from '../../../../services/http.service';
 import { AppConfigService } from '../../../../services/app-config.service';
 import { MasterService } from '../../../../services/master.service';
 
+interface arrayItem {
+  answerDescription: string;
+  isValid: boolean;
+};
+
 @Component({
   selector: 'app-add-questions',
   templateUrl: './add-questions.component.html',
@@ -27,7 +32,7 @@ export class AddQuestionsComponent implements OnInit {
     // this.buildForm();
   }
 
-  arrayItems: any[] = [];
+  arrayItems: arrayItem[] = [];
   createArrayItems(){
     try{
       for(var i = 0; i <= 3; i++){
@@ -43,15 +48,8 @@ export class AddQuestionsComponent implements OnInit {
     { id: 1, choiceText: 'Description', isSelected: false },
     { id: 2, choiceText: 'Image', isSelected: false },
     { id: 3, choiceText: 'Video', isSelected: false }
-  ]
-
-  // arrayItems: {
-  //   answerDescription: string;
-  //   isValid: boolean;
-  // }[];
-
-  // arrayItem: arrayItems[];
-
+  ];
+  
   newForm() {
     try {
       console.log('this.arrayItems', this.arrayItems)
