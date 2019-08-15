@@ -1,21 +1,25 @@
 <div class="container">
 
   <div class="row mt-4">
-    <div class="offset-sm-2 col-sm-4 mt-2">
+    <div class="col-sm-4 mt-2">
       <h5>Course</h5>
     </div>
-    <div class="offset-sm-2 col-sm-2 text-right">
+    <div class="offset-sm-6 col-sm-2 text-right">
       <button matTooltip="GO BACK" routerLink="/course" mat-mini-fab class="mat-mini-fab-white" type="button">
         <mat-icon class="pointer;">arrow_back</mat-icon>
       </button>
     </div>
   </div>
 
+  <form [formGroup]="courseForm" (ngSubmit)="saveCourse()">
   <div class="row mt-4">
-    <div class="offset-sm-2 col-sm-8">
-      <mat-card>
-        <form [formGroup]="courseForm" (ngSubmit)="saveCourse()">
-
+    <div class="col-sm-4 col-md-4 image-div">
+      <!-- <img [src]="url" height="200"> <br/> -->
+      <mat-icon>image</mat-icon>
+      <input type='file' (change)="onSelectFile($event)">
+    </div>
+    <div class="col-sm-8 col-md-8">
+      <!-- <mat-card> -->
           <div class="form-group">
             <div class="row">
               <div class="col-sm-12">
@@ -42,27 +46,45 @@
               <div class="col-sm-12">
                 <mat-form-field class="example-full-width" appearance="outline">
                     <mat-label>Course description</mat-label>
-                  <input matInput formControlName="courseDescription" placeholder="Course description" 
+                  <input matInput formControlName="courseDescription" placeholder="Course description"
                   (keypress)="aplphabetsOnly($event)" (blur)="aplphabetsOnly($event)" required>
                 </mat-form-field>
               </div>
             </div>
           </div>
+
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm-12">
+                <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Category</mat-label>
+                    <mat-select formControlName="categoryId" >
+                      <mat-option *ngFor="let category of list_category" [value]="category.categoryId">
+                        {{category.categoryName}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+              </div>
+            </div>
+          </div>
+
           <br/>
+
           <div class="form-group">
             <div class="row">
               <div class="col-sm-12">
                 <button type="button" mat-raised-button class="btn btn-block col-sm-2 mr-3" (click)="resetFormData()">RESET</button>
                 <button type="submit" mat-raised-button class="btn btn-block col-sm-2" color="primary" [disabled]="courseForm.invalid || !courseForm.dirty">
-                  SAVE
+                  NEXT
                   <i class="fas fa-spinner ml-2" *ngIf="showLoading"></i>
                 </button>
               </div>
             </div>
           </div>
 
-        </form>
-      </mat-card>
+
+      <!-- </mat-card> -->
     </div>
   </div>
+  </form>
 </div>
