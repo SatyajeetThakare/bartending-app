@@ -5,6 +5,8 @@ import { SharedModule } from '../../../modules/shared.module';
 import { CourseRoutingModule } from './course-routing.module';
 import { CourseListComponent } from './course-list/course-list.component';
 import { AddCourseComponent } from './add-course/add-course.component';
+import { AddCourseModuleComponent } from './add-course/add-course-module/add-course-module.component';
+import { CourseModuleListComponent } from './add-course/course-module-list/course-module-list.component';
 
 @NgModule({
   imports: [
@@ -13,6 +15,6 @@ import { AddCourseComponent } from './add-course/add-course.component';
     CourseRoutingModule
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-  declarations: [ CourseListComponent, AddCourseComponent ]
+  declarations: [ CourseListComponent, AddCourseComponent, AddCourseModuleComponent, CourseModuleListComponent ]
 })
 export class CourseModule { }
