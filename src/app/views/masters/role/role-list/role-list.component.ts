@@ -9,7 +9,8 @@ import { SnackbarService } from '../../../../services/snackbar.service';
 import { HttpService } from '../../../../services/http.service';
 import { AppConfigService } from '../../../../services/app-config.service';
 import { MasterService } from '../../../../services/master.service';
-
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
 import { ConfirmationDialogComponent } from '../../../confirmation-dialog/confirmation-dialog.component';
 
 import * as _ from 'lodash';
@@ -37,7 +38,7 @@ export class RoleListComponent implements OnInit {
 
   displayedColumns: string[] = ['roleName', 'roleDescription', 'action'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
-
+  destroySubscriptions$: Subject<boolean> = new Subject<boolean>();
   constructor(private http: HttpClient,
     private snackbarService: SnackbarService,
     private httpService: HttpService,
@@ -64,7 +65,7 @@ export class RoleListComponent implements OnInit {
   }
   getRoleList(){
     try{
-      this.masterService.selectRole().subscribe((res: any) => {
+      this.masterService.selectRole().takeUntil(this.destroySubscriptions$).subscribe((res: any) => {
 
         if(res.status.trim().toLowerCase() === 'success'){
           this.list_role = res.data;
@@ -148,5 +149,8 @@ export class RoleListComponent implements OnInit {
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
-
+  ngOnDestroy(){
+    this.destroySubscriptions$.next(true);
+    this.destroySubscriptions$.complete();
+  }
 }
