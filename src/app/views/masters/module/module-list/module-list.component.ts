@@ -137,14 +137,10 @@ export class ModuleListComponent implements OnInit {
     } catch (e) {
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
+  }
     ngOnDestroy(){
       this.destroySubscriptions$.next(true);
       this.destroySubscriptions$.complete();
     }
   }
 
-  ngOnDestroy(){
-    this.destroySubscriptions$.next(true);
-    this.destroySubscriptions$.complete();
-  }
-}
