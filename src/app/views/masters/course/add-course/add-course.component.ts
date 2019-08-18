@@ -156,21 +156,22 @@ export class AddCourseComponent implements OnInit {
       let data = this.courseForm.getRawValue();
 
       console.log('data', data);
-      let urlValue = this.courseId > 0 ? `UpdateCourse` : `Courseinsert`;
-      this.httpService.post(urlValue, data).subscribe((res: any) => {
-        console.log('res', res);
-        this.showLoading = false;
+      this.router.navigate(['/course/course-module-list']);
+      // let urlValue = this.courseId > 0 ? `UpdateCourse` : `Courseinsert`;
+      // this.httpService.post(urlValue, data).subscribe((res: any) => {
+      //   console.log('res', res);
+      //   this.showLoading = false;
 
-        if(res && res.status.trim().toLowerCase() == 'success'){
-          this.snackbarService.openSnackBar('Course added successfully', 'Close', 'success-snackbar');
-          this.location.back();
-        }else {
-          this.snackbarService.openSnackBar(res.message, 'Close', 'error-snackbar');
-        }
+      //   if(res && res.status.trim().toLowerCase() == 'success'){
+      //     this.snackbarService.openSnackBar('Course added successfully', 'Close', 'success-snackbar');
+      //     this.location.back();
+      //   }else {
+      //     this.snackbarService.openSnackBar(res.message, 'Close', 'error-snackbar');
+      //   }
 
-      }, (err) => {
-        this.snackbarService.openSnackBar(err.statusText, 'Close', 'error-snackbar');
-      });
+      // }, (err) => {
+      //   this.snackbarService.openSnackBar(err.statusText, 'Close', 'error-snackbar');
+      // });
     }catch(e){
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }

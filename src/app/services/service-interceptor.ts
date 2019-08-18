@@ -44,13 +44,13 @@ export class ServiceInterceptor implements HttpInterceptor {
     const authReq = req.clone({ setHeaders: { "authtoken": this.authService.getAuthToken(), "userid": this.authService.getUserInfo().userId ? this.authService.getUserInfo().userId : 0 } });
 
     //logging the updated Parameters to browser's console
-    // console.log("Before making api call : ", authReq);
+    console.log("Before making api call : ", authReq);
 
     let urlPathValue: string = null;
     if(authReq.url){
       urlPathValue = new URL(authReq.url).pathname;
     }
-    // console.log('urlPathValue', urlPathValue)
+    console.log('urlPathValue', urlPathValue)
 
     if(urlPathValue != '/login'){
 
