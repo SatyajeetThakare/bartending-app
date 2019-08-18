@@ -16,7 +16,7 @@ class ImageSnippet {
 })
 export class AddCourseModuleComponent implements OnInit {
 
-  courseForm: FormGroup;
+  moduleForm: FormGroup;
   charactersPattern = "^[a-zA-Z \-\']+";
   characterPattern = "^[a-zA-Z]+";
   mobnumPattern = "^((\\+91-?)|0)?[0-9]{10}$";
@@ -25,12 +25,12 @@ export class AddCourseModuleComponent implements OnInit {
 
   courseId: number = 0;
   objSessionInfo: any;
-  pageTitle: string = 'Add course';
+  pageTitle: string = 'Add module';
   questions = [
-    { id: 100, name: 'Question 1' },
-    { id: 200, name: 'Question 2' },
-    { id: 300, name: 'Question 3' },
-    { id: 400, name: 'Question 4' }
+    { id: 1, name: 'Question 1' },
+    { id: 2, name: 'Question 2' },
+    { id: 3, name: 'Question 3' },
+    { id: 4, name: 'Question 4' }
   ];
   constructor(
     private formBuilder: FormBuilder,
@@ -47,6 +47,7 @@ export class AddCourseModuleComponent implements OnInit {
   ngOnInit() {
     this.objSessionInfo = this.appConfigService.getSessionObj('userInfo');
     this.getCourseList();
+    this.getQuestionList();
     this.route.params.subscribe(params => {
 
       this.courseId = params.courseId;
@@ -63,13 +64,17 @@ export class AddCourseModuleComponent implements OnInit {
   objCourseModule: any;
   resetcourseObject(){
     try{
+      // this.courseId > 0 ? Number(this.courseId) : 0
       this.objCourseModule= {
-        courseId: this.courseId > 0 ? Number(this.courseId) : 0,
-        courseName: null,
-        courseCode: null,
-        courseDescription: null,
+        courseId: 1,
+        moduleName: null,
+        moduleCode: null,
+        moduleDescription: null,
         categoryId: null,
-        userId: this.appConfigService.getSessionObj('userInfo').userId
+        imageFile: null,
+        videoFile: null,
+        questions: null,
+        createdBy: this.appConfigService.getSessionObj('userInfo').userId
       }
     }catch(e){
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
@@ -77,25 +82,32 @@ export class AddCourseModuleComponent implements OnInit {
   }
   bindcourseData(){
     try{
-      this.courseForm = this.formBuilder.group({
+      this.moduleForm = this.formBuilder.group({
         courseId: [this.objCourseModule.courseId, Validators.required],
-        courseCode: [this.objCourseModule.courseCode, Validators.required],
-        courseName: [this.objCourseModule.courseName, Validators.required],
-        courseDescription: [this.objCourseModule.courseDescription, [Validators.required, Validators.pattern(this.charactersPattern)]],
-        categoryId: [this.objCourseModule.categoryId, Validators.required],
-        questions: new FormArray([]),
-        userId: [this.objCourseModule.userId, Validators.required]
+        moduleCode: [this.objCourseModule.moduleCode, Validators.required],
+        moduleName: '',
+        moduleDescription: [this.objCourseModule.moduleDescription, [Validators.required, Validators.pattern(this.charactersPattern)]],
+        questions: [this.objCourseModule.questions, Validators.required],
+        imageFile: [this.objCourseModule.imageFile, Validators.required],
+        videoFile: [this.objCourseModule.videoFile, Validators.required],
+        createdBy: [this.objCourseModule.createdBy, Validators.required]
       });
-      this.addCheckboxes();
       this.findInvalidControls();
     }catch(e){
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
-  private addCheckboxes() {
-    this.questions.map((o, i) => {
-      const control = new FormControl(i === 0); // if first item set to true, else false
-      (this.courseForm.controls.questions as FormArray).push(control);
+  // private addCheckboxes() {
+  //   this.questions.map((o, i) => {
+  //     const control = new FormControl(i === 0); // if first item set to true, else false
+  //     (this.moduleForm.controls.questions as FormArray).push(control);
+  //   });
+  // }
+  list_questions: any [];
+  getQuestionList(){
+    this.httpService.get(`QuestionSelect`).subscribe((res: any) =>{
+      this.list_questions = res.data;
+      console.log("categryList",this.list_questions);
     });
   }
   list_course: any = [];
@@ -235,13 +247,14 @@ export class AddCourseModuleComponent implements OnInit {
   }
 
   showLoading: boolean = false;
-  savecourse(){
+  saveModule(){
     try{
 
       this.showLoading = true;
 
-      let data = this.courseForm.getRawValue();
-      let urlValue = this.courseId > 0 ? `Updatecourse` : `courseinsert`;
+      let data = this.moduleForm.getRawValue();
+
+      let urlValue = this.courseId > 0 ? `UpdateModule` : `Moduleinsert`;
       this.httpService.post(urlValue, data).subscribe((res: any) => {
 
         this.showLoading = false;
@@ -263,7 +276,7 @@ export class AddCourseModuleComponent implements OnInit {
 
   public findInvalidControls() {
     const invalid = [];
-    const controls = this.courseForm.controls;
+    const controls = this.moduleForm.controls;
     for (const name in controls) {
         if (controls[name].invalid) {
             invalid.push(name);
