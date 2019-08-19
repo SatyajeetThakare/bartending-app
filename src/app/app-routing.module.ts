@@ -9,7 +9,7 @@ import { SelectivePreloadingStrategyService } from './selective-preloading-strat
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: '', component: LoginComponent, pathMatch: "full" },
+  // { path: '', component: LoginComponent, pathMatch: "full" },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'questions', loadChildren: './views/masters/questions/questions.module#QuestionsModule'},
   { path: 'course', loadChildren: './views/masters/course/course.module#CourseModule', canActivate: [AuthGuard] },
@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: 'role', loadChildren: './views/masters/role/role.module#RoleModule', canActivate: [AuthGuard] },
   { path: 'user', loadChildren: './views/masters/user/user.module#UserModule', canActivate: [AuthGuard] },
   { path: 'user-role-mapping', loadChildren: './views/masters/user-role-mapping/user-role-mapping.module#UserRoleMappingModule', canActivate: [AuthGuard] },
-  { path: '**', component: LoginComponent },
+  // { path: '**', component: LoginComponent },
 ];
 
 @NgModule({

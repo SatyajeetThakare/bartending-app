@@ -4,13 +4,12 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
 import { HttpClient } from '@angular/common/http';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
-// import { CourseService } from '../services/course.service';
+import { Observable, forkJoin } from 'rxjs';
 
 import { SnackbarService } from '../../../../services/snackbar.service';
 import { HttpService } from '../../../../services/http.service';
 import { AppConfigService } from '../../../../services/app-config.service';
 import { MasterService } from '../../../../services/master.service';
-
 
 @Component({
   selector: 'app-add-course',
@@ -45,7 +44,7 @@ export class AddCourseComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private location: Location,
     private snackbarService: SnackbarService,
-    // private courseService: CourseService
+    private masterService: MasterService
   ) { }
 
   ngOnInit() {
@@ -56,11 +55,20 @@ export class AddCourseComponent implements OnInit {
       console.log("courseId", params['courseId']);
       this.resetCourseObject();
       this.bindCourseData();
-      this.getCategoryDetails();
       if(params['courseId'] > 0) {
         this.pageTitle = 'Edit Course';
         this.getCourseDetails();
+      }else{
+        this.getCategoriesList();
       }
+    });
+  }
+
+  list_category: any[] = [];
+  getCategoriesList(){
+    this.masterService.GetCategories().subscribe((res: any) => {
+      this.list_category = res.data;
+      console.log('this.list_category', this.list_category);
     });
   }
 
@@ -115,29 +123,43 @@ export class AddCourseComponent implements OnInit {
   getCourseDetails(){
     try{
       console.log('id', this.courseId);
-      this.httpService.post(`selectCoursebyid`, {courseId: this.courseId}).subscribe((res: any) => {
-        console.log("in getCoursedetails",res);
-        if(res && res.status.trim().toLowerCase() == 'success'){
-          this.objCourse = JSON.parse(JSON.stringify({...this.objCourse, ...res.data }));
-          console.log("this.objCourse",this.objCourse);
-          this.bindCourseData();
-        }else {
-          this.snackbarService.openSnackBar(res.message, 'Close', 'error-snackbar');
-        }
+      let getCategoriesService = this.masterService.GetCategories();
+      let selectCourse = this.httpService.post(`selectCoursebyId`, {courseId: this.courseId})
+
+      forkJoin([getCategoriesService, selectCourse]).subscribe((results: any) => {
+        console.log(results);
+        this.list_category = results[0].data;
+        this.objCourse = JSON.parse(JSON.stringify({...this.objCourse, ...results[1].data }));
+        this.bindCourseData();
       }, (err) => {
         this.snackbarService.openSnackBar(err.statusText, 'Close', 'error-snackbar');
       });
+
+      // this.httpService.post(`selectCoursebyId`, {courseId: this.courseId}).subscribe((res: any) => {
+      //   console.log("in getCoursedetails",res);
+      //   if(res && res.status.trim().toLowerCase() == 'success'){
+      //     this.objCourse = JSON.parse(JSON.stringify({...this.objCourse, ...res.data }));
+      //     console.log("this.objCourse",this.objCourse);
+      //     this.bindCourseData();
+      //   }else {
+      //     this.snackbarService.openSnackBar(res.message, 'Close', 'error-snackbar');
+      //   }
+      // }, (err) => {
+      //   this.snackbarService.openSnackBar(err.statusText, 'Close', 'error-snackbar');
+      // });
     }catch(e){
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
-  list_category: any = [];
-  getCategoryDetails(){
-    this.httpService.get(`GetCategoryDetails`).subscribe((res: any) =>{
-      this.list_category = res.data;
-      console.log("categryList",this.list_category);
-    });
-  }
+
+  // list_category: any = [];
+  // getCategoryDetails(){
+  //   this.httpService.get(`GetCategoryDetails`).subscribe((res: any) =>{
+  //     this.list_category = res.data;
+  //     console.log("categryList",this.list_category);
+  //   });
+  // }
+
   aplphabetsOnly(event: any) {
     try{
 
@@ -156,7 +178,7 @@ export class AddCourseComponent implements OnInit {
     this.resetCourseObject();
     this.bindCourseData();
   }
-  
+
   showLoading: boolean = false;
   saveCourse(){
     try{
@@ -164,9 +186,8 @@ export class AddCourseComponent implements OnInit {
       this.showLoading = true;
 
       let data = this.courseForm.getRawValue();
-
       console.log('data', data);
-      this.router.navigate(['/course/course-module-list']);
+
       let urlValue = this.courseId > 0 ? `UpdateCourse` : `Courseinsert`;
       this.httpService.post(urlValue, data).subscribe((res: any) => {
         console.log('res', res);
@@ -174,7 +195,7 @@ export class AddCourseComponent implements OnInit {
 
         if(res && res.status.trim().toLowerCase() == 'success'){
           this.snackbarService.openSnackBar('Course added successfully', 'Close', 'success-snackbar');
-          this.location.back();
+          this.router.navigate(['/course/add-course/course-module-list', {courseId: this.courseId, profile_type: 'create'}]);
         }else {
           this.snackbarService.openSnackBar(res.message, 'Close', 'error-snackbar');
         }

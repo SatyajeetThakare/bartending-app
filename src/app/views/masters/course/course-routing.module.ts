@@ -9,10 +9,11 @@ import { AddCourseModuleComponent } from './add-course/add-course-module/add-cou
 const routes: Routes = [
   {path: '', redirectTo: 'course-list', pathMatch: 'full'},
   {path: 'course-list', component: CourseListComponent},
-  {path: 'add-course', component: AddCourseComponent},
-  {path: 'course-module-list', component: CourseModuleListComponent},
-  {path: 'add-course-module', component: AddCourseModuleComponent}
-  
+  {path: 'add-course', children : [
+    {path: '', component: AddCourseComponent},
+    {path: 'course-module-list', component: CourseModuleListComponent},
+    {path: 'add-course-module', component: AddCourseModuleComponent} ]
+  }
 ];
 
 @NgModule({

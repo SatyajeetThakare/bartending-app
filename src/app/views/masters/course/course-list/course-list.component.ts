@@ -47,10 +47,9 @@ export class CourseListComponent implements OnInit {
     public dialog: MatDialog,
     private route: ActivatedRoute
   ) { }
-  
+
   ngOnInit() {
     try{
-      console.log('In course list');
       this.getCourseList();
     }catch(e){
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
@@ -60,11 +59,11 @@ export class CourseListComponent implements OnInit {
   getCourseList(){
     try{
      this.masterService.selectCourse().takeUntil(this.destroySubscriptions$).subscribe((res: any) => {
-        console.log('res', res);
+        // console.log('res', res);
         if(res.status.trim().toLowerCase() === 'success'){
           this.list_course = res.data;
           this.dataSource = new MatTableDataSource(this.list_course);
-          console.log("list_course",this.list_course);
+          // console.log("list_course",this.list_course);
         }else{
           this.snackbarService.openSnackBar(res[0].message, 'Close', 'error-snackbar');
         }
@@ -84,7 +83,7 @@ export class CourseListComponent implements OnInit {
 
   editCourse(obj){
     try{
-      console.log('obj', obj);
+      // console.log('obj', obj);
       this.router.navigate(['/course/add-course', {courseId: obj.courseId, profile_type: 'edit'}]);
     }catch(e){
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
