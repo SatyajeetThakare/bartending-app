@@ -50,7 +50,7 @@ export class ServiceInterceptor implements HttpInterceptor {
     if(authReq.url){
       urlPathValue = new URL(authReq.url).pathname;
     }
-    console.log('urlPathValue', urlPathValue)
+    // console.log('urlPathValue', urlPathValue)
 
     if(urlPathValue != '/login'){
 
@@ -63,10 +63,10 @@ export class ServiceInterceptor implements HttpInterceptor {
             }
           },
           error => {
-
+            console.log('error: ', error);
             //logging the http response to browser's console in case of a failuer
             if (event instanceof HttpResponse) {
-              console.log("api call error :", event);
+              console.log("api call error: ", event);
             }else if(error.status === 401){
               console.log('Error', error)
               this.snackbarService.openSnackBar('Session expired, please login again.', 'Close', 'error-snackbar');

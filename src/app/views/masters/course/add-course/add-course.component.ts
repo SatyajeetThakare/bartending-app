@@ -35,6 +35,7 @@ export class AddCourseComponent implements OnInit {
   courseId: number = 0;
   objSessionInfo: any;
   pageTitle: string = 'Add Course';
+  
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -89,7 +90,7 @@ export class AddCourseComponent implements OnInit {
         courseReferenceLink: null,
         categoryId: null,
         userId: this.appConfigService.getSessionObj('userInfo').userId,
-        createdby: this.appConfigService.getSessionObj('userInfo').userId,
+        createdBy: this.appConfigService.getSessionObj('userInfo').userId,
         updatedby: this.appConfigService.getSessionObj('userInfo').userId,
         isActive: 1,
       }
@@ -108,8 +109,8 @@ export class AddCourseComponent implements OnInit {
         coursePosterImage: '',
         courseReferenceLink: '',
         categoryId: [this.objCourse.categoryId, Validators.required],
-        userId: [this.objCourse.createdby, Validators.required],
-        createdby: [this.objCourse.createdby, Validators.required],
+        userId: [this.objCourse.createdBy, Validators.required],
+        createdBy: [this.objCourse.createdBy, Validators.required],
         updatedby: [this.objCourse.updatedby, Validators.required],
         isActive: [this.objCourse.isActive, Validators.required]
       });
@@ -195,7 +196,7 @@ export class AddCourseComponent implements OnInit {
 
         if(res && res.status.trim().toLowerCase() == 'success'){
           this.snackbarService.openSnackBar('Course added successfully', 'Close', 'success-snackbar');
-          this.router.navigate(['/course/add-course/course-module-list', {courseId: this.courseId, profile_type: 'create'}]);
+          this.router.navigate(['/course/add-course/course-module-list', {courseId: res.data[0].courseId, profile_type: 'create'}]);
         }else {
           this.snackbarService.openSnackBar(res.message, 'Close', 'error-snackbar');
         }
@@ -225,7 +226,6 @@ export class AddCourseComponent implements OnInit {
 
   onSubmit() {
     console.log("Submitted");
-    // console.log("form value",this.registerForm.value);
   }
 
 }
