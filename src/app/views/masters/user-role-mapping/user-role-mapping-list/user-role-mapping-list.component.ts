@@ -33,7 +33,7 @@ const ELEMENT_DATA: UserRoleMappingElement[] = [];
 })
 export class UserRoleMappingListComponent implements OnInit {
 
-  displayedColumns: string[] = ['UserRoleMappingName', 'UserRoleMappingDescription'];
+  displayedColumns: string[] = ['User', 'Course'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   constructor(private http: HttpClient, private formBuilder: FormBuilder, private modalService: BsModalService,

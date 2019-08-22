@@ -3,6 +3,8 @@
   <nav class="navbar navbar-expand-sm bg-light navbar-light fixed-top" *ngIf="isLoggedIn$ | async as isLoggedIn">
 
     <a class="navbar-brand" routerLink="dashboard">Company Name</a>
+    <!-- <img class="navbar-brand" src="../../../assets/images/logo.PNG"></img> -->
+
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -12,6 +14,10 @@
 
         <li class="nav-item">
           <a class="nav-link" routerLink="questions">Questions</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="user-dashboard">User Dashboard</a>
         </li>
 
         <li class="nav-item dropdown">
@@ -24,7 +30,7 @@
             <a class="dropdown-item" routerLink="module">Module</a>
             <a class="dropdown-item" routerLink="role">Role</a>
             <a class="dropdown-item" routerLink="user">User</a>
-            <a class="dropdown-item" routerLink="user-role-mapping">User Role Mapping</a>
+            <a class="dropdown-item" routerLink="user-role-mapping">User Course Mapping</a>
           </div>
         </li>
       </ul>

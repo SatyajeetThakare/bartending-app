@@ -17,11 +17,11 @@
 
   <br/>
 
-  <div class="row mt-2">
+  <!-- <div class="row mt-2">
     <div class="col-sm-12">
       <mat-hint class="pull-right">Double click on row to edit</mat-hint>
     </div>
-  </div>
+  </div> -->
 
   <div class="row mt-2">
     <div class="col-sm-12">
@@ -47,7 +47,7 @@
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (dblclick)="editCourse(row)"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
       </div>
     </div>

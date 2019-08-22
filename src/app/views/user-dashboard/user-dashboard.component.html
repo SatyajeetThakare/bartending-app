@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6">
+      <h5 class="mt-4">Courses Assigned<span class="badge badge-secondary"></span></h5>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="row">
+    <div class="col-sm-4" *ngFor="let item of list_user_courses; let i = index;">
+      <mat-card class="module-card mb-3">
+        <mat-card-content>
+          <strong>{{item.courseName}}</strong>
+          <br>
+          <br>
+          <span>
+            {{item.courseDescription}}
+          </span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <!-- 13.235.45.209: -->
+</div>

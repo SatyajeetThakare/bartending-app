@@ -12,6 +12,7 @@ const routes: Routes = [
   // { path: '', component: LoginComponent, pathMatch: "full" },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'questions', loadChildren: './views/masters/questions/questions.module#QuestionsModule'},
+  { path: 'user-dashboard', loadChildren: './views/user-dashboard/user-dashboard.module#UserDashboardModule'},
   { path: 'course', loadChildren: './views/masters/course/course.module#CourseModule', canActivate: [AuthGuard] },
   { path: 'organisation', loadChildren: './views/masters/organisation/organisation.module#OrganisationModule', canActivate: [AuthGuard] },
   { path: 'module', loadChildren:'./views/masters/module/module.module#ModuleModule', canActivate:  [AuthGuard]},

@@ -38,7 +38,10 @@ export class CourseListComponent implements OnInit {
   displayedColumns: string[] = ['CourseName', 'CourseDescription','action'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
   destroySubscriptions$: Subject<boolean> = new Subject<boolean>();
-  constructor(private http: HttpClient, private formBuilder: FormBuilder, private modalService: BsModalService,
+
+  constructor(private http: HttpClient,
+    private formBuilder: FormBuilder,
+    private modalService: BsModalService,
     private snackbarService: SnackbarService,
     private httpService: HttpService,
     private appConfigService: AppConfigService,
@@ -55,6 +58,7 @@ export class CourseListComponent implements OnInit {
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
+
   list_course: any = [];
   getCourseList(){
     try{

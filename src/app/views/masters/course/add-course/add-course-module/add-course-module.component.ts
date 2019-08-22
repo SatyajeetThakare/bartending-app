@@ -6,9 +6,12 @@ import { AppConfigService } from 'src/app/services/app-config.service';
 import { MasterService } from 'src/app/services/master.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
 import { Location } from '@angular/common';
+import { AngularEditorConfig } from '@kolkov/angular-editor';
+
 class ImageSnippet {
   constructor(public src: string, public file: File) {}
 }
+
 @Component({
   selector: 'app-add-course-module',
   templateUrl: './add-course-module.component.html',
@@ -32,6 +35,49 @@ export class AddCourseModuleComponent implements OnInit {
     { id: 3, name: 'Question 3' },
     { id: 4, name: 'Question 4' }
   ];
+
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+      spellcheck: true,
+      height: 'auto',
+      // height: '15rem',
+      minHeight: '10rem',
+      maxHeight: 'auto',
+      width: 'auto',
+      minWidth: '0',
+      translate: 'yes',
+      enableToolbar: true,
+      showToolbar: true,
+      placeholder: 'Module description...',
+      defaultParagraphSeparator: '',
+      defaultFontName: '',
+      defaultFontSize: '',
+      fonts: [
+        {class: 'arial', name: 'Arial'},
+        {class: 'times-new-roman', name: 'Times New Roman'},
+        {class: 'calibri', name: 'Calibri'},
+        {class: 'comic-sans-ms', name: 'Comic Sans MS'}
+      ],
+      customClasses: [
+      {
+        name: 'quote',
+        class: 'quote',
+      },
+      {
+        name: 'redText',
+        class: 'redText'
+      },
+      {
+        name: 'titleText',
+        class: 'titleText',
+        tag: 'h1',
+      },
+    ],
+    uploadUrl: 'v1/image',
+    sanitize: true,
+    toolbarPosition: 'top',
+  };
+
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -46,14 +92,13 @@ export class AddCourseModuleComponent implements OnInit {
 
   ngOnInit() {
     this.objSessionInfo = this.appConfigService.getSessionObj('userInfo');
-    this.getCourseList();
+    // this.getCourseList();
     this.getQuestionList();
     this.route.params.subscribe(params => {
 
       this.courseId = params.courseId;
-      console.log('this.courseId', this.courseId)
-      this.resetcourseObject();
-      this.bindcourseData();
+      this.resetModuleObject();
+      this.bindModuleData();
 
       if(params['courseId'] > 0) {
         this.pageTitle = 'Edit course';
@@ -61,12 +106,13 @@ export class AddCourseModuleComponent implements OnInit {
       }
     });
   }
+
   objCourseModule: any;
-  resetcourseObject(){
+  resetModuleObject(){
     try{
-      // this.courseId > 0 ? Number(this.courseId) : 0
-      this.objCourseModule= {
-        courseId: 1,
+
+      this.objCourseModule = {
+        courseId: this.courseId,
         moduleName: null,
         moduleCode: null,
         moduleDescription: null,
@@ -80,16 +126,16 @@ export class AddCourseModuleComponent implements OnInit {
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
-  bindcourseData(){
+  bindModuleData(){
     try{
       this.moduleForm = this.formBuilder.group({
         courseId: [this.objCourseModule.courseId, Validators.required],
-        moduleCode: [this.objCourseModule.moduleCode, Validators.required],
-        moduleName: '',
-        moduleDescription: [this.objCourseModule.moduleDescription, [Validators.required, Validators.pattern(this.charactersPattern)]],
+        moduleCode: [this.objCourseModule.moduleName], // Shared screen did not have moduleCode property
+        moduleName: [this.objCourseModule.moduleName, Validators.required],
+        moduleDescription: [this.objCourseModule.moduleDescription, Validators.required],
         questions: [this.objCourseModule.questions, Validators.required],
-        imageFile: [this.objCourseModule.imageFile, Validators.required],
-        videoFile: [this.objCourseModule.videoFile, Validators.required],
+        imageFile: [this.objCourseModule.imageFile],
+        videoFile: [this.objCourseModule.videoFile],
         createdBy: [this.objCourseModule.createdBy, Validators.required]
       });
       this.findInvalidControls();
@@ -103,13 +149,15 @@ export class AddCourseModuleComponent implements OnInit {
   //     (this.moduleForm.controls.questions as FormArray).push(control);
   //   });
   // }
+
   list_questions: any [];
   getQuestionList(){
     this.httpService.get(`QuestionSelect`).subscribe((res: any) =>{
       this.list_questions = res.data;
-      console.log("categryList",this.list_questions);
+      console.log("this.list_questions", this.list_questions);
     });
   }
+
   list_course: any = [];
   getCourseList(){
     try{
@@ -135,7 +183,7 @@ export class AddCourseModuleComponent implements OnInit {
           // this.objCoursecourse.courseName = res.data.courseName;
           // this.objCoursecourse.courseDescription = res.data.courseDescription;
           // this.objCoursecourse.courseId = res.data.CourseId;
-          this.bindcourseData();
+          this.bindModuleData();
         }else {
           this.snackbarService.openSnackBar(res.message, 'Close', 'error-snackbar');
         }
@@ -148,8 +196,8 @@ export class AddCourseModuleComponent implements OnInit {
   }
 
   resetFormData(){
-    this.resetcourseObject();
-    this.bindcourseData();
+    this.resetModuleObject();
+    this.bindModuleData();
   }
   aplphabetsOnly(event: any) {
     try{
@@ -211,31 +259,34 @@ export class AddCourseModuleComponent implements OnInit {
     }
     else {
       return false;
-    } 
+    }
     }
   }
+
   selectedVideos: any = [];
-  uploadVideo(event: any) { 
+  uploadVideo(event: any) {
     let files = event.target.files;
     this.selectedVideos = [];
     if(files[0]){
-    if (!this.validateFile(files[0].name,"Video")) {
-        console.log('Selected file format is not supported');
-        this.snackbarService.openSnackBar("Selected file format is not supported",'Close', 'error-snackbar');
-        return false;
+      if (!this.validateFile(files[0].name,"Video")) {
+          console.log('Selected file format is not supported');
+          this.snackbarService.openSnackBar("Selected file format is not supported",'Close', 'error-snackbar');
+          return false;
+      }
+      else{
+      this.selectedVideos = files[0];
+      }
     }
-    else{
-    this.selectedVideos = files[0];
-    }
-  }
+
     let fData: FormData = new FormData;
 
     for (var i = 0; i < files.length; i++) {
-        fData.append("file", files[i]);
+      fData.append("file", files[i]);
     }
+
     var _data = {
-        filename: 'Sample File',
-        id: '0001'
+      filename: 'Sample File',
+      id: '0001'
     }
 
     fData.append("data", JSON.stringify(_data));
@@ -243,7 +294,6 @@ export class AddCourseModuleComponent implements OnInit {
     //     response => console.log(response),
     //     error => console.log(error)
     // )
-   
   }
 
   showLoading: boolean = false;
@@ -251,12 +301,19 @@ export class AddCourseModuleComponent implements OnInit {
     try{
 
       this.showLoading = true;
+      console.log('this.moduleForm.value.questions.toString()')
 
-      let data = this.moduleForm.getRawValue();
+      this.moduleForm.patchValue({
+        moduleCode: this.moduleForm.value.moduleName
+      })
 
-      let urlValue = this.courseId > 0 ? `UpdateModule` : `Moduleinsert`;
+      let data = JSON.parse(JSON.stringify(this.moduleForm.getRawValue()));
+      data.questions = this.moduleForm.value.questions.toString();
+
+      let urlValue = this.courseId > 0 ? `Moduleinsert` : `Moduleinsert`;
       this.httpService.post(urlValue, data).subscribe((res: any) => {
 
+        console.log('res', res)
         this.showLoading = false;
 
         if(res && res.status.trim().toLowerCase() == 'success'){
@@ -278,9 +335,11 @@ export class AddCourseModuleComponent implements OnInit {
     const invalid = [];
     const controls = this.moduleForm.controls;
     for (const name in controls) {
-        if (controls[name].invalid) {
-            invalid.push(name);
-        }
+      if (controls[name].invalid) {
+        invalid.push(name);
+      }
     }
+
+    console.log('Invalid controls', invalid);
   }
 }

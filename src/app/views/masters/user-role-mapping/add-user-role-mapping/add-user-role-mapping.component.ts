@@ -50,16 +50,19 @@ export class AddUserRoleMappingComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('In add-user-role-mapping component');
-    // this.resetAddUserRoleMappingForm();
-    this.objSessionInfo = this.appConfigService.getSessionObj('userInfo');
-    console.log('this.objSessionInfo', this.objSessionInfo);
+    try{
+      this.objSessionInfo = this.appConfigService.getSessionObj('userInfo');
+      console.log('this.objSessionInfo', this.objSessionInfo);
 
-    this.getUserList();
-    this.getRoleList();
+      this.getUserList();
+      this.getCourseList();
+      // this.getRoleList();
 
-    this.resetUserRoleMappingObject();
-    this.bindUserRoleMappingData();
+      this.resetUserRoleMappingObject();
+      this.bindUserRoleMappingData();
+    }catch(e){
+      this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
+    }
   }
 
   list_user: any = [];
@@ -69,6 +72,22 @@ export class AddUserRoleMappingComponent implements OnInit {
         console.log('res', res);
         if(res.status.trim().toLowerCase() === 'success'){
           this.list_user = res.data;
+        }else{
+          this.snackbarService.openSnackBar(res[0].message, 'Close', 'error-snackbar');
+        }
+      });
+    }catch(e){
+      this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
+    }
+  }
+
+  list_courses: any = [];
+  getCourseList(){
+    try{
+      this.masterService.selectCourse().subscribe((res: any) => {
+        console.log('res', res);
+        if(res.status.trim().toLowerCase() === 'success'){
+          this.list_courses = res.data;
         }else{
           this.snackbarService.openSnackBar(res[0].message, 'Close', 'error-snackbar');
         }
@@ -98,12 +117,12 @@ export class AddUserRoleMappingComponent implements OnInit {
   resetUserRoleMappingObject(){
     try{
       this.objUserRoleMapping = {
-        UserRoleMappingId: 0,
-        UserId: null,
-        RoleId: null,
-        createdby: this.appConfigService.getSessionObj('userInfo').UserId,
-        updatedby: this.appConfigService.getSessionObj('userInfo').UserId,
-        IsActive: 1,
+        // UserRoleMappingId: 0,
+        userId: null,
+        courseId: null,
+        createdby: this.appConfigService.getSessionObj('userInfo').userId,
+        // updatedby: this.appConfigService.getSessionObj('userInfo').userId,
+        // IsActive: 1,
       }
     }catch(e){
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
@@ -113,12 +132,12 @@ export class AddUserRoleMappingComponent implements OnInit {
   bindUserRoleMappingData(){
     try{
       this.userRoleMappingForm = this.formBuilder.group({
-        UserRoleMappingId: [this.objUserRoleMapping.UserRoleMappingId, Validators.required],
-        UserId: [this.objUserRoleMapping.UserId, Validators.required],
-        RoleId: [this.objUserRoleMapping.RoleId, Validators.required],
+        // UserRoleMappingId: [this.objUserRoleMapping.UserRoleMappingId, Validators.required],
+        userId: [this.objUserRoleMapping.userId, Validators.required],
+        courseId: [this.objUserRoleMapping.courseId, Validators.required],
         createdby: [this.objUserRoleMapping.createdby, Validators.required],
-        updatedby: [this.objUserRoleMapping.updatedby, Validators.required],
-        IsActive: [this.objUserRoleMapping.IsActive, Validators.required]
+        // updatedby: [this.objUserRoleMapping.updatedby, Validators.required],
+        // IsActive: [this.objUserRoleMapping.IsActive, Validators.required]
       });
 
       this.findInvalidControls();
@@ -151,7 +170,7 @@ export class AddUserRoleMappingComponent implements OnInit {
 
       console.log('data', data);
 
-      this.httpService.post(`Userrolemapping`, data).subscribe((res: any) => {
+      this.httpService.post(`Usercoursemapping`, data).subscribe((res: any) => {
         console.log('res', res);
 
         this.showLoading = false;

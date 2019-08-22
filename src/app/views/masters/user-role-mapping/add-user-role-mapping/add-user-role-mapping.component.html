@@ -20,20 +20,20 @@
             <div class="row">
               <div class="col-sm-6">
                 <mat-form-field class="example-full-width">
-                  <mat-select placeholder="User" formControlName="UserId" required>
+                  <mat-select placeholder="User" formControlName="userId" required>
                     <mat-option>None</mat-option>
-                    <mat-option *ngFor="let item of list_user" [value]="item.UserId">
-                      {{item.FirstName}} {{item.LastName}}
+                    <mat-option *ngFor="let item of list_user" [value]="item.userId">
+                      {{item.firstName}} {{item.lastName}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
               <div class="col-sm-6">
                 <mat-form-field class="example-full-width">
-                  <mat-select placeholder="Role" formControlName="RoleId" required>
+                  <mat-select placeholder="Course" formControlName="courseId" required>
                     <mat-option>None</mat-option>
-                    <mat-option *ngFor="let item of list_role" [value]="item.RoleId">
-                      {{item.RoleName}}
+                    <mat-option *ngFor="let item of list_courses" [value]="item.courseId">
+                      {{item.courseName}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>

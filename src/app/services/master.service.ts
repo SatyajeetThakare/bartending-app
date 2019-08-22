@@ -50,6 +50,7 @@ export class MasterService {
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
   }
+
   selectModule(){
     try{
       return this.httpService.get('Selectmodule');
@@ -61,6 +62,20 @@ export class MasterService {
   selectCourse(){
     try{
       return this.httpService.get('selectCourse');
+    } catch(e){
+      this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
+    }
+  }
+
+  selectCourseByUserId(){
+    try{
+
+      console.log('Session obj', this.getSessionObj('userInfo'));
+
+      let data = {
+        userId: this.getSessionObj('userInfo') ? this.getSessionObj('userInfo').userId : null
+      }
+      return this.httpService.post('selectCoursebyUserId', data);
     } catch(e){
       this.snackbarService.openSnackBar(e.message, 'Close', 'error-snackbar');
     }
