@@ -1,0 +1,64 @@
+<div class="container">
+    <div class="row mt-4" *ngIf="!submitted">
+        <div class="col-sm-4 mt-2">
+            <h5>{{pageTitle}}</h5>
+        </div>
+    </div>
+    <div class="row mt-4" *ngIf="!submitted">
+        <div class="col-sm-8">
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-card class="module-card m-4">
+                        <mat-card-content>
+                            {{module_list.ModuleName}}
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div class="col-sm-6">
+                    <mat-card class="module-card m-4">
+                        <mat-card-content>
+                            {{module_list.ModuleDescription}}
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <img src="https://ibb.co/xXvyYTN" height="200">
+                </div>
+                <div class="col-sm-6">
+                    <div class="video">
+                        <video controls (click)="toggleVideo()" #videoPlayer>
+                            <source src="{{videoSource}}" type="video/mp4" />
+                            Browser not supported
+                        </video>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <mat-selection-list class="question-div">
+                    <mat-list-option
+                        *ngFor="let question of list_questions | paginate: { itemsPerPage: 1, currentPage: p }"
+                        [value]="question.QuestionId">
+                        {{p}}&nbsp;&nbsp;{{question.QuestionDescription}}
+                    </mat-list-option>
+                </mat-selection-list>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 text-left">
+                    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+            </div>
+            <div class="col-sm-6 text-right">
+                <button mat-raised-button  color="primary" (click)="submit()">Submit</button>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="submitted">
+            <div class="col-xs-12">
+                    <p class="alert alert-success">
+                        <strong>You have successfully submitted your exam.</strong>
+                    </p>
+                  </div>
+    </div>
+</div>

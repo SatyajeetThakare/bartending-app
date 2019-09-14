@@ -9,7 +9,7 @@
 
   <div class="row">
     <div class="col-sm-4" *ngFor="let item of list_user_courses; let i = index;">
-      <mat-card class="module-card mb-3">
+      <mat-card class="module-card mb-3" (click)="clicked()"> 
         <mat-card-content>
           <strong>{{item.courseName}}</strong>
           <br>

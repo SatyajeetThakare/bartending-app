@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../services/http.service';
 import { MasterService } from '../../services/master.service';
 import { SnackbarService } from '../../services/snackbar.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -15,7 +16,8 @@ export class UserDashboardComponent implements OnInit {
   
   constructor(private httpService: HttpService,
     private snackbarService: SnackbarService,
-    private masterService: MasterService
+    private masterService: MasterService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -47,5 +49,8 @@ export class UserDashboardComponent implements OnInit {
     }
 
   }
-
+clicked(){
+  console.log("clicked");
+  this.router.navigate(['/user-dashboard/course-exam',{moduleId:34}]);
+}
 }

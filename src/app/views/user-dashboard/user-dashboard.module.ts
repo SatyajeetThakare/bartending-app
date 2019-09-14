@@ -4,14 +4,16 @@ import { SharedModule } from '../../modules/shared.module';
 
 import { UserDashboardRoutingModule } from './user-dashboard-routing.module';
 import { UserDashboardComponent } from './user-dashboard.component';
-
+import { CourseExamComponent } from './course-exam/course-exam.component';
+import {NgxPaginationModule} from 'ngx-pagination';
 @NgModule({
   imports: [
     CommonModule,
     SharedModule,
-    UserDashboardRoutingModule
+    UserDashboardRoutingModule,
+    NgxPaginationModule
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-  declarations: [ UserDashboardComponent ]
+  declarations: [ UserDashboardComponent, CourseExamComponent]
 })
 export class UserDashboardModule { }
